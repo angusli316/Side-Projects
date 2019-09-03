@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from lxml import html
 import sys
+import csv
 
 session = True
 
@@ -58,14 +59,29 @@ while session == True:
 
 	newHtmlFile = newUrlRequest.text
 	newSoup = BeautifulSoup(newHtmlFile, 'html.parser')
-	ratingList = newSoup.findAll('span', itemprop = "ratingValue")
-	numberOfRatings = newSoup.findAll('span', itemprop = "ratingCount")
-	
+	ratingList = newSoup.findAll('span', itemprop = 'ratingValue')
+	numberOfRatings = newSoup.findAll('span', itemprop = 'ratingCount')
+	people = newSoup.findAll('div', class_ = 'credit_summary_item')
+	stars = people[2].text.strip()
+	newStars, pipe, junk = stars.partition('|')
+	genre = newSoup.findAll('div', class_ = 'see-more inline canwrap')
+	newGenre = genre[1].text
+	newGenre = newGenre.replace(' ', '')
+	newGenre = newGenre.replace('|', '')
+	newGenre = newGenre.replace('\n', '')
+	newGenre = newGenre.replace('\t', '')
+	newGenre = newGenre.replace(' ', '')
+
 	rating = ratingList[0].text
 	numberRatings = numberOfRatings[0].text
-	print('\n' + results[selection - 1].strip())
+	print('\n' + results[selection - 1].strip() + '\n')
+	print(newGenre + '\n')
 	print("Average Rating: " + rating)
-	print("Number of Ratings: " + numberRatings + '\n')
+	print("Number of Ratings: " + numberRatings)
+	for i in people[0:2]:
+		print(i.text)
+	
+	print('\n' + newStars + '\n')
 
 
 
