@@ -62,8 +62,10 @@ while session == True:
 	ratingList = newSoup.findAll('span', itemprop = 'ratingValue')
 	numberOfRatings = newSoup.findAll('span', itemprop = 'ratingCount')
 	people = newSoup.findAll('div', class_ = 'credit_summary_item')
-	stars = people[2].text.strip()
-	newStars, pipe, junk = stars.partition('|')
+	if len(people) == 3:
+		stars = people[2].text.strip()
+		newStars, pipe, junk = stars.partition('|')
+
 	genre = newSoup.findAll('div', class_ = 'see-more inline canwrap')
 	newGenre = genre[1].text
 	newGenre = newGenre.replace(' ', '')
@@ -77,12 +79,22 @@ while session == True:
 	print('\n' + results[selection - 1].strip() + '\n')
 	print(newGenre + '\n')
 	print("Average Rating: " + rating)
-	print("Number of Ratings: " + numberRatings)
-	for i in people[0:2]:
-		print(i.text)
-	
-	print('\n' + newStars + '\n')
+	print("Number of Ratings: " + numberRatings + '\n')
+	if len(people) == 2:
+		for i in people[0:1]:
+			print(i.text)
+
+		stars = people[1].text.strip()
+		newStars, pipe, junk = stars.partition('|')
+		print('\n' + newStars + '\n')
 
 
+	if len(people) == 3:
+		for x in range(3):
+			ppl = people[x].text.strip()
+			newPpl, pipe, junk = ppl.partition('|')
+			people[x] = newPpl
 
-
+		for i in people[0:3]:
+			print(i)
+			print('\n')
